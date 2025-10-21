@@ -37,7 +37,7 @@ if not creds_json:
 
 # Convertir JSON string a diccionario
 creds_dict = json.loads(creds_json)
-scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
 
 # Autorizar gspread
@@ -160,6 +160,7 @@ if paused_campaigns:
 else:
 
     print("\n✅ All campaign are running. ¡Everything is ok!")
+
 
 
 
