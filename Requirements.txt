@@ -1,0 +1,9 @@
+requests
+pandas
+gspread
+google-auth
+google-auth-httplib2
+google-auth-oauthlib
+flask
+gunicorn
+python-dotenv
