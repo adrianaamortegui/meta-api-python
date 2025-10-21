@@ -30,9 +30,9 @@ def get_campaign_status(campaign_id, access_token):
 print("📥 Loading campaigns from Google Sheets...")
 
 # Leer credenciales del entorno
-creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
 if not creds_json:
-    print("❌ Variable GOOGLE_CREDENTIALS_JSON no encontrada.")
+    print("❌ Variable GOOGLE_APPLICATION_CREDENTIALS_JSON no encontrada.")
     exit()
 
 # Convertir JSON string a diccionario
@@ -133,4 +133,5 @@ if paused_campaigns:
 else:
 
     print("\n✅ All campaign are running. ¡Everything is ok!")
+
 
