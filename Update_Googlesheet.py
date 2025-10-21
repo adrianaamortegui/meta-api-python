@@ -1,13 +1,17 @@
 import os
+import json
 import pandas as pd
 import numpy as np
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Autenticación con Google
 SERVICE_ACCOUNT_FILE = 'facebookcampaignsdr-andres.json'
-SPREADSHEET_ID = '1Lob1WrtVsb0alLpVHV612nEg71y6ETqCLv3Bc8OtqjU'
+SPREADSHEET_ID = '16aMdJ4PNk2Kj_QI4Ox59u-uitcMcT8me6yLWkwtdetk'
 scopes = ['https://www.googleapis.com/auth/spreadsheets']
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=scopes)
 client = gspread.authorize(credentials)
@@ -28,8 +32,8 @@ if existing_data:
 else:
     df_sheet = pd.DataFrame(columns=["Campaign Name", "Spend", "Leads", "CPL"])
 
-# Leer CSV actualizado
-df_csv = pd.read_csv("Campaign_Insights_Andres.csv", keep_default_na=False)
+# Read CSV Update
+df_csv = pd.read_csv("Campaign_Insights.csv", keep_default_na=False)
 #df_csv.replace("N/A", "", inplace=True)
 
 # Limpieza completa
@@ -77,4 +81,5 @@ worksheet.update(
 )
 
 print("✅ Google Sheet updated: fecha en A1 y datos desde A2.")
+
 
