@@ -1,17 +1,18 @@
 import os
+import io
 import requests
 import pandas as pd
 from dotenv import load_dotenv
 
-# Cargar credenciales
+# Load Credentials
 load_dotenv()
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
-# Elegir rango de fechas
+# Date Range
 DATE_PRESET = "this_month"
 
 
-# Función para obtener el estado de una campaña
+# Function to get campaign status
 def get_campaign_status(campaign_id, access_token):
     url = f"https://graph.facebook.com/v19.0/{campaign_id}"
     params = {
@@ -27,10 +28,11 @@ def get_campaign_status(campaign_id, access_token):
         return 'UNKNOWN'
 
 
-# Cargar archivo con campañas
+# Load CSV File Campaigns Info
 print("📥 Loading campaigns from campaigns.csv...")
 try:
-    campaigns_df = pd.read_csv("campaigns_info.csv")
+    csv_data = os.getenv("CAMPAIGNS_CSV")
+    campaigns_df = pd.read_csv(io.StringIO(csv_data))
 except FileNotFoundError:
     print("❌ File campaigns.csv not found.")
     exit()
@@ -46,10 +48,10 @@ for _, row in campaigns_df.iterrows():
 
     print(f"➡️  Fetching data for: {campaign_name} ({campaign_id})...")
 
-    # ---- Paso 1: Obtener el estado de la campaña por separado ----
+    # ---- Step 1: Get Campaign Status ----
     campaign_status = get_campaign_status(campaign_id, ACCESS_TOKEN)
 
-    # ---- Paso 2: Obtener los insights (métricas) ----
+    # ---- Step 2: Get the insights (métricas) ----
     url = f"https://graph.facebook.com/v19.0/{campaign_id}/insights"
     params = {
         "fields": "spend,actions",  # Eliminamos 'campaign_status' de aquí
@@ -73,7 +75,7 @@ for _, row in campaigns_df.iterrows():
     spend = float(item.get("spend", 0))
     actions = item.get("actions", [])
 
-    # Lógica de alerta
+    # Alert
     states_to_alert = ['PAUSED', 'ADVERTISER_PAUSED', 'INACTIVE']
 
     if campaign_status in states_to_alert:
@@ -94,15 +96,16 @@ for _, row in campaigns_df.iterrows():
 
     print(f"✅ {campaign_name} → Status: {campaign_status}, Spend: ${spend:.2f}, Leads: {leads}, CPL: {cpl}\n")
 
-# Exportar resultados
+# Export results
 df = pd.DataFrame(results)
-df.to_csv("Campaign_Insights_Andres.csv", index=False)
-print(f"\n📊 Report saved: Campaign_Insights_Andres.csv ({len(df)} campaigns processed)")
+df.to_csv("Campaign_Insights.csv", index=False)
+print(f"\n📊 Report saved: Campaign_Insights.csv ({len(df)} campaigns processed)")
 
-# Sección de Notificaciones
+# Notifications
 if paused_campaigns:
     print("\n🔔 ¡ATTENTION! There are campaign paused. Please, check!.")
     for campaign in paused_campaigns:
         print(f"- {campaign['name']} ({campaign['id']})")
 else:
+
     print("\n✅ All campaign are running. ¡Everything is ok!")
