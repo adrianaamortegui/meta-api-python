@@ -125,6 +125,33 @@ df = pd.DataFrame(results)
 df.to_csv("Campaign_Insights.csv", index=False)
 print(f"\n📊 Report saved: Campaign_Insights.csv ({len(df)} campaigns processed)")
 
+# === Write results back to Google Sheet ===
+try:
+    print("\n📤 Updating 'Results' sheet in Google Sheets...")
+
+    # Abre la hoja principal
+    spreadsheet = client.open_by_key(SPREADSHEET_ID)
+
+    # Intenta acceder a la pestaña "Results"
+    try:
+        results_sheet = spreadsheet.worksheet("Results")
+        results_sheet.clear()
+    except Exception:
+        # Si no existe, la crea
+        results_sheet = spreadsheet.add_worksheet(title="Results", rows="100", cols="10")
+
+    # Convierte DataFrame a lista de listas
+    results_values = [df.columns.tolist()] + df.values.tolist()
+
+    # Escribe los datos
+    results_sheet.update("A1", results_values)
+
+    print("✅ 'Results' sheet updated successfully!")
+
+except Exception as e:
+    print(f"❌ Error updating 'Results' sheet: {e}")
+
+
 # Notifications
 if paused_campaigns:
     print("\n🔔 ¡ATTENTION! There are campaign paused. Please, check!.")
@@ -133,5 +160,6 @@ if paused_campaigns:
 else:
 
     print("\n✅ All campaign are running. ¡Everything is ok!")
+
 
 
