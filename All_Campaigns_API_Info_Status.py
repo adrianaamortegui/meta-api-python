@@ -49,7 +49,7 @@ SHEET_NAME = os.getenv("SHEET_NAME", None)  # opcional
 
 try:
     if SHEET_NAME:
-        sheet = client.open_by_key(CAMPAIGN_INFO_SPREADSHEET_ID).worksheet(SHEET_NAME)
+        sheet = client.open_by_key(CAMPAIGN_INFO_SPREADSHEET_ID).worksheet("Campaigns")
     else:
         sheet = client.open_by_key(CAMPAIGN_INFO_SPREADSHEET_ID).sheet1  # primera hoja
 
@@ -160,6 +160,7 @@ if paused_campaigns:
 else:
 
     print("\n✅ All campaign are running. ¡Everything is ok!")
+
 
 
 
