@@ -1,0 +1,37 @@
+name: Daily Meta API Automation
+
+on:
+  schedule:
+    - cron: "0 12 * * *"  # Ejecuta todos los días a las 12:00 UTC
+  workflow_dispatch:      # Permite ejecutarlo manualmente
+
+jobs:
+  run-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run Meta API script
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+        CAMPAIGN_INFO_SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        FACEBOOK_MONITOR_SPREADSHEET_ID: ${{ secrets.DESTINATION_SPREADSHEET_ID }}
+        SHEET_NAME: ${{ secrets.SHEET_NAME }}
+      run: python All_Campaigns_API_Info_Status.py
+
+    - name: Update Google Sheet
+      env:
+        GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+        FACEBOOK_MONITOR_SPREADSHEET_ID: ${{ secrets.DESTINATION_SPREADSHEET_ID }}
+      run: python Update_GoogleSheet.py
