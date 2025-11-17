@@ -30,9 +30,9 @@ def get_campaign_status(campaign_id, access_token):
 print("📥 Loading campaigns from Google Sheets...")
 
 # Leer credenciales del entorno
-creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
 if not creds_json:
-    print("❌ Variable GOOGLE_APPLICATION_CREDENTIALS_JSON no encontrada.")
+    print("❌ Variable GOOGLE_CREDENTIALS_JSON no encontrada.")
     exit()
 
 # Convertir JSON string a diccionario
@@ -44,14 +44,14 @@ credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
 client = gspread.authorize(credentials)
 
 # Leer ID y nombre de la hoja
-SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
+CAMPAIGN_INFO_SPREADSHEET_ID = os.getenv("CAMPAIGN_INFO_SPREADSHEET_ID")
 SHEET_NAME = os.getenv("SHEET_NAME", None)  # opcional
 
 try:
     if SHEET_NAME:
-        sheet = client.open_by_key(SPREADSHEET_ID).worksheet(SHEET_NAME)
+        sheet = client.open_by_key(CAMPAIGN_INFO_SPREADSHEET_ID).worksheet(SHEET_NAME)
     else:
-        sheet = client.open_by_key(SPREADSHEET_ID).sheet1  # primera hoja
+        sheet = client.open_by_key(CAMPAIGN_INFO_SPREADSHEET_ID).sheet1  # primera hoja
 
     data = sheet.get_all_records()
     campaigns_df = pd.DataFrame(data)
@@ -160,6 +160,7 @@ if paused_campaigns:
 else:
 
     print("\n✅ All campaign are running. ¡Everything is ok!")
+
 
 
 
