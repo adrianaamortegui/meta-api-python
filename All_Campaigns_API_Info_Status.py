@@ -121,9 +121,9 @@ for _, row in campaigns_df.iterrows():
     print(f"✅ {campaign_name} → Status: {campaign_status}, Spend: ${spend:.2f}, Leads: {leads}, CPL: {cpl}\n")
 
 # Export results
-#df = pd.DataFrame(results)
-#df.to_csv("Campaign_Insights.csv", index=False)
-#print(f"\n📊 Report saved: Campaign_Insights.csv ({len(df)} campaigns processed)")
+df = pd.DataFrame(results)
+df.to_csv("Campaign_Insights.csv", index=False)
+print(f"\n📊 Report saved: Campaign_Insights.csv ({len(df)} campaigns processed)")
 
 # === Write results back to Google Sheet ===
 try:
@@ -160,6 +160,7 @@ if paused_campaigns:
 else:
 
     print("\n✅ All campaign are running. ¡Everything is ok!")
+
 
 
 
