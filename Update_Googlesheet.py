@@ -8,9 +8,9 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 # Leer las credenciales desde la variable de entorno
-creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
 if not creds_json:
-    raise ValueError("❌ Variable GOOGLE_APPLICATION_CREDENTIALS_JSON no encontrada.")
+    raise ValueError("❌ Variable GOOGLE_CREDENTIALS_JSON no encontrada.")
 
 creds_dict = json.loads(creds_json)
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -18,17 +18,17 @@ credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
 client = gspread.authorize(credentials)
 
 # Autenticación con Google
-SPREADSHEET_ID_CAMPAIGN_MONITOR = os.getenv("SPREADSHEET_ID_CAMPAIGN_MONITOR")
-if not SPREADSHEET_ID_CAMPAIGN_MONITOR:
-    raise ValueError("❌ Variable SPREADSHEET_ID_CAMPAIGN_MONITOR not found.")
+FACEBOOK_MONITOR_SPREADSHEET_ID = os.getenv("FACEBOOK_MONITOR_SPREADSHEET_ID")
+if not FACEBOOK_MONITOR_SPREADSHEET_ID:
+    raise ValueError("❌ Variable FACEBOOK_MONITOR_SPREADSHEET_ID not found.")
 
-sheet = client.open_by_key(SPREADSHEET_ID_CAMPAIGN_MONITOR)
-worksheet = sheet.worksheet("October")
+sheet = client.open_by_key(FACEBOOK_MONITOR_SPREADSHEET_ID)
+worksheet = sheet.worksheet(SHEET_NAME)
 
 # Abrir hoja
-sheet = client.open_by_key(SPREADSHEET_ID_CAMPAIGN_MONITOR)
+sheet = client.open_by_key(FACEBOOK_MONITOR_SPREADSHEET_ID)
 #worksheet = sheet.sheet1
-worksheet = sheet.worksheet("October")
+worksheet = sheet.worksheet(SHEET_NAME)
 
 # Leer hoja desde A2 en adelante (dejando A1 para la fecha)
 existing_data = worksheet.get_all_values()[1:]  # Salta A1
@@ -90,6 +90,7 @@ worksheet.update(
 )
 
 print("✅ Google Sheet updated: fecha en A1 y datos desde A2.")
+
 
 
 
