@@ -42,8 +42,8 @@ else:
     df_sheet = pd.DataFrame(columns=["Campaign Name", "Spend", "Leads", "CPL"])
 
 # Read CSV Update
-df_csv = pd.read_csv("Campaign_Insights.csv", keep_default_na=False)
-#df_csv.replace("N/A", "", inplace=True)
+# df_csv = pd.read_csv("Campaign_Insights.csv", keep_default_na=False)
+# df_csv.replace("N/A", "", inplace=True)
 
 # Limpieza completa
 df_csv.replace([np.nan, np.inf, -np.inf, "NaN", "N/A"], "", inplace=True)
@@ -90,6 +90,7 @@ worksheet.update(
 )
 
 print("✅ Google Sheet updated: fecha en A1 y datos desde A2.")
+
 
 
 
